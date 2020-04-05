@@ -59,7 +59,7 @@ namespace MIVLGU_IOP_Activity_emulator
                 {                
                     StreamReader input = new StreamReader(response.GetResponseStream());
                     string buff = input.ReadToEnd();
-                    return new Response(response, buff, response.Headers[HttpRequestHeader.ContentLocation]);
+                    return new Response(response, buff, response.ResponseUri.ToString());
                 }
             }
             finally
@@ -74,17 +74,18 @@ namespace MIVLGU_IOP_Activity_emulator
         private string password;
         public bool TryLogin(string login, string password)
         {
+            this.login = login;
+            this.password = password;
             bool ret = false;
             
             string testsession_location = Net.SendRequest("https://www.mivlgu.ru/iop/login/index.php", "https://www.mivlgu.ru/iop/login/index.php", "POST", true, "username=" + login
                 + "&password=" + password
                 + "&rememberusername=1").next_location;
-            string login_location = Net.SendRequest(testsession_location, "https://www.mivlgu.ru/iop/login/index.php?username=" + login
-                + "&password=" + password
-                + "&rememberusername=1", "GET").next_location;
-            MessageBox.Show(Net.SendRequest(login_location, "https://www.mivlgu.ru/iop/login/index.php?username=" + login
-               + "&password=" + password
-               + "&rememberusername=1", "GET").str_resp);
+            string login_location = Net.SendRequest(testsession_location, "https://www.mivlgu.ru/iop/login/index.php", "GET").next_location;
+            if(login_location == "https://www.mivlgu.ru/iop/")
+            {
+                ret = true;
+            }
             return ret;
         }
     }

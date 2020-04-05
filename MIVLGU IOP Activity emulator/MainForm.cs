@@ -17,10 +17,20 @@ namespace MIVLGU_IOP_Activity_emulator
         {
             InitializeComponent();
         }
-        
+        private void Log(string message)
+        {
+            lbLog.Items.Add(message);
+        }
         private void bStart_Click(object sender, EventArgs e)
         {
-            emul.TryLogin(tbLogin.Text, tbPassword.Text);
+            Log("trying to login...");
+            if(emul.TryLogin(tbLogin.Text, tbPassword.Text))
+            {
+                Log("successful!");
+            } else
+            {
+                Log("login failed.");
+            }
         }
     }
 }
