@@ -32,5 +32,11 @@ namespace MIVLGU_IOP_Activity_emulator
                 Log("login failed.");
             }
         }
+
+        private void bStop_Click(object sender, EventArgs e)
+        {
+            emul.Out();
+            Log("succesfuly out");
+        }
     }
 }

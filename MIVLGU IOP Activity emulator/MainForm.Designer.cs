@@ -166,6 +166,7 @@
             this.bStop.TabIndex = 6;
             this.bStop.Text = "Stop Emulate Session";
             this.bStop.UseVisualStyleBackColor = false;
+            this.bStop.Click += new System.EventHandler(this.bStop_Click);
             // 
             // cbAutoLoginIfDisconnected
             // 

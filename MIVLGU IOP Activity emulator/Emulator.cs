@@ -76,13 +76,14 @@ namespace MIVLGU_IOP_Activity_emulator
     {
         private string login;
         private string password;
+        private string session_key;
         public bool TryLogin(string login, string password)
         {
             this.login = login;
             this.password = password;
             bool ret = false;
-            
-            string testsession_location = Net.SendRequest("https://www.mivlgu.ru/iop/login/index.php", "https://www.mivlgu.ru/iop/login/index.php", "POST",true, true, "username=" + login
+
+            string testsession_location = Net.SendRequest("https://www.mivlgu.ru/iop/login/index.php", "https://www.mivlgu.ru/iop/login/index.php", "POST", true, true, "username=" + login
                 + "&password=" + password
                 + "&rememberusername=1").next_location;
             Net.Response last_resp = Net.SendRequest(testsession_location, "https://www.mivlgu.ru/iop/login/index.php", "GET");
@@ -93,12 +94,28 @@ namespace MIVLGU_IOP_Activity_emulator
                 login_location = last_resp.next_location;
             }
             Net.Response base_resp = Net.SendRequest("https://www.mivlgu.ru/iop/", "https://www.mivlgu.ru/iop/", "GET");
-            if(base_resp.str_resp.Contains("Вы зашли под именем"))
+            if (base_resp.str_resp.Contains("Вы зашли под именем"))
             {
                 ret = true;
             }
-            MessageBox.Show(base_resp.str_resp.Substring(10500));
+            int sskeyind = base_resp.str_resp.IndexOf("sesskey"); //fuck go next
+            sskeyind += "sesskey".Length;
+            sskeyind = base_resp.str_resp.IndexOf("sesskey", sskeyind);
+
+            string sessk = "";
+            for (int i = sskeyind + "sesskey".Length + 1; i < sskeyind + 10 + "sesskey".Length + 1; i++)
+            {
+                if (base_resp.str_resp[i] == '\"') break;
+                sessk += base_resp.str_resp[i];
+            }
+            this.session_key = sessk;
             return ret;
+        }
+        public void Out()
+        {
+            //https://www.mivlgu.ru/iop/login/logout.php?sesskey=dc99IPxcQW"
+            var resp = Net.SendRequest("https://www.mivlgu.ru/iop/login/logout.php?sesskey=" + this.session_key, "https://www.mivlgu.ru/iop/", "GET");
+            //MessageBox.Show(resp.str_resp.Substring(10000));
         }
     }
 }
