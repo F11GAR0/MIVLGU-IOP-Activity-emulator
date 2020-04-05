@@ -77,6 +77,17 @@ namespace MIVLGU_IOP_Activity_emulator
         private string login;
         private string password;
         private string session_key;
+        private List<string> page_links;
+        private Random rand;
+        public Emulator()
+        {
+            rand = new Random();
+            page_links = new List<string>();
+        }
+        public void LoadPageList(List<string> pages)
+        {
+            this.page_links = pages;
+        }
         public bool TryLogin(string login, string password)
         {
             this.login = login;
@@ -116,6 +127,26 @@ namespace MIVLGU_IOP_Activity_emulator
             //https://www.mivlgu.ru/iop/login/logout.php?sesskey=dc99IPxcQW"
             var resp = Net.SendRequest("https://www.mivlgu.ru/iop/login/logout.php?sesskey=" + this.session_key, "https://www.mivlgu.ru/iop/", "GET");
             //MessageBox.Show(resp.str_resp.Substring(10000));
+        }
+        public struct PageRequestInfo
+        {
+            public bool isSuccessful;
+            public string page;
+            public int index_in_local_list;
+            public PageRequestInfo(bool v1, string v2, int index) : this()
+            {
+                this.isSuccessful = v1;
+                this.page = v2;
+                this.index_in_local_list = index;
+            }
+        }
+        public PageRequestInfo SendRandomPageRequest(int index = -1)
+        {
+            if (page_links.Count < 1) return new PageRequestInfo(false, "", -1);
+            if(index == -1)
+                index = rand.Next(page_links.Count);
+            var resp = Net.SendRequest(page_links[index], "https://www.mivlgu.ru/iop/", "GET");
+            return new PageRequestInfo(!resp.str_resp.Contains("Войдите в систему"), page_links[index], index);
         }
     }
 }

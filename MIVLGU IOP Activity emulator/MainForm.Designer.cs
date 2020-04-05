@@ -35,22 +35,27 @@
             this.label2 = new System.Windows.Forms.Label();
             this.bStart = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.bStop = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.bPageListLoad = new System.Windows.Forms.Button();
+            this.cbAutoLoginIfDisconnected = new System.Windows.Forms.CheckBox();
+            this.cbRandomTimestamp = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.cbRandomTimestamp = new System.Windows.Forms.CheckBox();
-            this.bStop = new System.Windows.Forms.Button();
-            this.cbAutoLoginIfDisconnected = new System.Windows.Forms.CheckBox();
+            this.oFD = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbLog
             // 
+            this.lbLog.Font = new System.Drawing.Font("Consolas", 12F);
             this.lbLog.FormattingEnabled = true;
+            this.lbLog.HorizontalScrollbar = true;
+            this.lbLog.ItemHeight = 19;
             this.lbLog.Location = new System.Drawing.Point(12, 12);
             this.lbLog.Name = "lbLog";
-            this.lbLog.Size = new System.Drawing.Size(398, 290);
+            this.lbLog.Size = new System.Drawing.Size(508, 289);
             this.lbLog.TabIndex = 0;
             // 
             // label1
@@ -111,50 +116,10 @@
             this.panel1.Controls.Add(this.tbLogin);
             this.panel1.Controls.Add(this.tbPassword);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(416, 28);
+            this.panel1.Location = new System.Drawing.Point(526, 28);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(161, 156);
             this.panel1.TabIndex = 6;
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.cbAutoLoginIfDisconnected);
-            this.panel2.Controls.Add(this.cbRandomTimestamp);
-            this.panel2.Location = new System.Drawing.Point(416, 203);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(161, 99);
-            this.panel2.TabIndex = 7;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(420, 12);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(36, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Login:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(416, 187);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(48, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Settings:";
-            // 
-            // cbRandomTimestamp
-            // 
-            this.cbRandomTimestamp.AutoSize = true;
-            this.cbRandomTimestamp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.cbRandomTimestamp.Location = new System.Drawing.Point(2, 3);
-            this.cbRandomTimestamp.Name = "cbRandomTimestamp";
-            this.cbRandomTimestamp.Size = new System.Drawing.Size(120, 17);
-            this.cbRandomTimestamp.TabIndex = 0;
-            this.cbRandomTimestamp.Text = "Random Timestamp";
-            this.cbRandomTimestamp.UseVisualStyleBackColor = false;
             // 
             // bStop
             // 
@@ -168,6 +133,30 @@
             this.bStop.UseVisualStyleBackColor = false;
             this.bStop.Click += new System.EventHandler(this.bStop_Click);
             // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.bPageListLoad);
+            this.panel2.Controls.Add(this.cbAutoLoginIfDisconnected);
+            this.panel2.Controls.Add(this.cbRandomTimestamp);
+            this.panel2.Location = new System.Drawing.Point(526, 203);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(161, 99);
+            this.panel2.TabIndex = 7;
+            // 
+            // bPageListLoad
+            // 
+            this.bPageListLoad.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.bPageListLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bPageListLoad.Location = new System.Drawing.Point(6, 71);
+            this.bPageListLoad.Name = "bPageListLoad";
+            this.bPageListLoad.Size = new System.Drawing.Size(147, 23);
+            this.bPageListLoad.TabIndex = 2;
+            this.bPageListLoad.Text = "Load page list";
+            this.bPageListLoad.UseVisualStyleBackColor = false;
+            this.bPageListLoad.Click += new System.EventHandler(this.bPageListLoad_Click);
+            // 
             // cbAutoLoginIfDisconnected
             // 
             this.cbAutoLoginIfDisconnected.AutoSize = true;
@@ -179,11 +168,44 @@
             this.cbAutoLoginIfDisconnected.Text = "Auto login if disconnected";
             this.cbAutoLoginIfDisconnected.UseVisualStyleBackColor = false;
             // 
+            // cbRandomTimestamp
+            // 
+            this.cbRandomTimestamp.AutoSize = true;
+            this.cbRandomTimestamp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.cbRandomTimestamp.Location = new System.Drawing.Point(2, 3);
+            this.cbRandomTimestamp.Name = "cbRandomTimestamp";
+            this.cbRandomTimestamp.Size = new System.Drawing.Size(120, 17);
+            this.cbRandomTimestamp.TabIndex = 0;
+            this.cbRandomTimestamp.Text = "Random Timestamp";
+            this.cbRandomTimestamp.UseVisualStyleBackColor = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(530, 12);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(36, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Login:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(526, 187);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(48, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Settings:";
+            // 
+            // oFD
+            // 
+            this.oFD.FileName = "list.txt";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(590, 314);
+            this.ClientSize = new System.Drawing.Size(699, 314);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.panel2);
@@ -192,6 +214,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MainForm";
             this.Text = "MIVLGU IOP Activity Emulator. By F11GAR0";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -216,6 +239,8 @@
         private System.Windows.Forms.CheckBox cbRandomTimestamp;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button bPageListLoad;
+        private System.Windows.Forms.OpenFileDialog oFD;
     }
 }
 
