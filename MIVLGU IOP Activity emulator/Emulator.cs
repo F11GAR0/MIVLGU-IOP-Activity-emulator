@@ -91,12 +91,14 @@ namespace MIVLGU_IOP_Activity_emulator
         public bool TryLogin(string login, string password)
         {
             this.login = login;
-            this.password = password;
+            this.password = System.Web.HttpUtility.UrlEncode(password);
             bool ret = false;
 
-            string testsession_location = Net.SendRequest("https://www.mivlgu.ru/iop/login/index.php", "https://www.mivlgu.ru/iop/login/index.php", "POST", true, true, "username=" + login
-                + "&password=" + password
-                + "&rememberusername=1").next_location;
+            Net.Response loginr = Net.SendRequest("https://www.mivlgu.ru/iop/login/index.php", "https://www.mivlgu.ru/iop/login/index.php", "POST", true, true, "username=" + this.login
+                + "&password=" + this.password
+                + "&rememberusername=1");
+            string testsession_location = loginr.next_location;
+
             Net.Response last_resp = Net.SendRequest(testsession_location, "https://www.mivlgu.ru/iop/login/index.php", "GET");
             string login_location = last_resp.next_location;
             if (login_location == testsession_location)
@@ -105,6 +107,7 @@ namespace MIVLGU_IOP_Activity_emulator
                 login_location = last_resp.next_location;
             }
             Net.Response base_resp = Net.SendRequest("https://www.mivlgu.ru/iop/", "https://www.mivlgu.ru/iop/", "GET");
+
             if (base_resp.str_resp.Contains("Вы зашли под именем"))
             {
                 ret = true;
@@ -124,9 +127,7 @@ namespace MIVLGU_IOP_Activity_emulator
         }
         public void Out()
         {
-            //https://www.mivlgu.ru/iop/login/logout.php?sesskey=dc99IPxcQW"
             var resp = Net.SendRequest("https://www.mivlgu.ru/iop/login/logout.php?sesskey=" + this.session_key, "https://www.mivlgu.ru/iop/", "GET");
-            //MessageBox.Show(resp.str_resp.Substring(10000));
         }
         public struct PageRequestInfo
         {
