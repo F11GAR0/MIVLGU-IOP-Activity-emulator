@@ -69,6 +69,7 @@
             this.tbLogin.Name = "tbLogin";
             this.tbLogin.Size = new System.Drawing.Size(147, 20);
             this.tbLogin.TabIndex = 2;
+            this.tbLogin.Text = "pks-117-student";
             // 
             // tbPassword
             // 

@@ -31,15 +31,28 @@ namespace MIVLGU_IOP_Activity_emulator
             public string result { get; set; }
             public string token { get; set; }
         }
-        public static Response SendRequest(string full_url, string reffer, string method )
-        {
+        public static Response SendRequest(string full_url, string reffer, string method, bool use_data = false,  string data = "")
+        { 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(full_url);
            // request.Headers.Set(HttpRequestHeader.Referer,reffer);
             request.Referer = reffer;
             request.Method = method;
             request.Date = DateTime.Now;
             request.KeepAlive = true;
-            request.AllowAutoRedirect = true;
+            
+            if (use_data)
+            {
+                var ldata = Encoding.ASCII.GetBytes(data);
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = ldata.Length;
+
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(ldata, 0, ldata.Length);
+                }
+            }
+            
+
             try
             {
                 using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
@@ -63,9 +76,9 @@ namespace MIVLGU_IOP_Activity_emulator
         {
             bool ret = false;
             
-            string testsession_location = Net.SendRequest("https://www.mivlgu.ru/iop/login/index.php", "https://www.mivlgu.ru/iop/login/index.php?username=" + login
+            string testsession_location = Net.SendRequest("https://www.mivlgu.ru/iop/login/index.php", "https://www.mivlgu.ru/iop/login/index.php", "POST", true, "username=" + login
                 + "&password=" + password
-                + "&rememberusername=1", "POST").next_location;
+                + "&rememberusername=1").next_location;
             string login_location = Net.SendRequest(testsession_location, "https://www.mivlgu.ru/iop/login/index.php?username=" + login
                 + "&password=" + password
                 + "&rememberusername=1", "GET").next_location;
