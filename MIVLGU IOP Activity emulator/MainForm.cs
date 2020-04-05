@@ -20,7 +20,7 @@ namespace MIVLGU_IOP_Activity_emulator
         
         private void bStart_Click(object sender, EventArgs e)
         {
-            emul.TryLogin("pks-117-student14", "fktrcfylh2A_");
+            emul.TryLogin(tbLogin.Text, tbPassword.Text);
         }
     }
 }
