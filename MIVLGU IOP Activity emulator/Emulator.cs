@@ -31,7 +31,8 @@ namespace MIVLGU_IOP_Activity_emulator
             public string result { get; set; }
             public string token { get; set; }
         }
-        public static Response SendRequest(string full_url, string reffer, string method, bool use_data = false,  string data = "")
+        public static CookieContainer CC;
+        public static Response SendRequest(string full_url, string reffer, string method, bool login = false, bool use_data = false,  string data = "")
         { 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(full_url);
            // request.Headers.Set(HttpRequestHeader.Referer,reffer);
@@ -39,7 +40,10 @@ namespace MIVLGU_IOP_Activity_emulator
             request.Method = method;
             request.Date = DateTime.Now;
             request.KeepAlive = true;
-            
+            if(login)
+                CC = new CookieContainer();
+            request.CookieContainer = CC;
+            request.UserAgent = "Mozilla / 5.0(Windows NT 6.1; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 80.0.3987.149 Safari / 537.36";
             if (use_data)
             {
                 var ldata = Encoding.ASCII.GetBytes(data);
@@ -78,14 +82,22 @@ namespace MIVLGU_IOP_Activity_emulator
             this.password = password;
             bool ret = false;
             
-            string testsession_location = Net.SendRequest("https://www.mivlgu.ru/iop/login/index.php", "https://www.mivlgu.ru/iop/login/index.php", "POST", true, "username=" + login
+            string testsession_location = Net.SendRequest("https://www.mivlgu.ru/iop/login/index.php", "https://www.mivlgu.ru/iop/login/index.php", "POST",true, true, "username=" + login
                 + "&password=" + password
                 + "&rememberusername=1").next_location;
-            string login_location = Net.SendRequest(testsession_location, "https://www.mivlgu.ru/iop/login/index.php", "GET").next_location;
-            if(login_location == "https://www.mivlgu.ru/iop/")
+            Net.Response last_resp = Net.SendRequest(testsession_location, "https://www.mivlgu.ru/iop/login/index.php", "GET");
+            string login_location = last_resp.next_location;
+            if (login_location == testsession_location)
+            {
+                last_resp = Net.SendRequest(testsession_location, "https://www.mivlgu.ru/iop/login/index.php", "GET");
+                login_location = last_resp.next_location;
+            }
+            Net.Response base_resp = Net.SendRequest("https://www.mivlgu.ru/iop/", "https://www.mivlgu.ru/iop/", "GET");
+            if(base_resp.str_resp.Contains("Вы зашли под именем"))
             {
                 ret = true;
             }
+            MessageBox.Show(base_resp.str_resp.Substring(10500));
             return ret;
         }
     }
